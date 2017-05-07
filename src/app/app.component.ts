@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PeopleService } from './people-list/people.service';
+import { PeopleService } from './people.service';
 
 @Component({
   selector: 'app-root',

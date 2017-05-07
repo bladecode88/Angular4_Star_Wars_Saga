@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PeopleService } from '../people.service';
 import { Person } from '../person';
 
 @Component({
@@ -11,16 +13,33 @@ import { Person } from '../person';
         {{person.name}} weights {{person.weight}} and is {{person.height}} tall.
       </p>
     </section>
+    <button (click)="gotoPeoplesList()">Back to peoples list</button>
   `,
   styleUrls: ['./person-details.component.scss']
 })
-export class PersonDetailsComponent implements OnInit {
+export class PersonDetailsComponent implements OnInit, OnDestroy {
 
-  @Input() person: Person;
+  person: Person;
+  sub: any;
 
-  constructor() { }
+  constructor(private _peopleService: PeopleService, private route: ActivatedRoute, private router: Router) {
+
+  }
 
   ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      let id = Number.parseInt(params['id']);
+      this.person = this._peopleService.get(id);
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  gotoPeoplesList() {
+    let link = ['/persons'];
+    this.router.navigate(link);
   }
 
 }
