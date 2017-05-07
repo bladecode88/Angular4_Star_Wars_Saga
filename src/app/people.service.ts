@@ -10,10 +10,19 @@ const PEOPLE : Person[] = [
 @Injectable()
 export class PeopleService {
   getAll() : Person[] {
-    return PEOPLE;
+    return PEOPLE.map(p => this.clone(p));
   }
 
   get(id: number) : Person {
-    return PEOPLE.find(p => p.id === id);
+    return this.clone(PEOPLE.find(p => p.id === id));
+  }
+
+  save(person: Person) {
+    let originalPerson = PEOPLE.find(p => p.id == person.id);
+    if (originalPerson) Object.assign(originalPerson, person);
+  }
+
+  private clone(object: any) {
+    return JSON.parse(JSON.stringify(object));
   }
 }
